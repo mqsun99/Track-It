@@ -3,6 +3,7 @@ const app = express();
 import dotenv from "dotenv";
 dotenv.config();
 import "express-async-errors";
+import morgan from "morgan";
 
 // db and authenticateUser
 import connectDB from "./db/connect.js";
@@ -15,17 +16,26 @@ import jobsRouter from "./routes/jobsRoutes.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 
+import authenticateUser from "./middleware/auth.js";
+
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
+
 // make json data available to use
 app.use(express.json());
 
 // try to first match all http requests
 app.get("/", (req, res) => {
-  //   throw new Error("error");
-  res.send("Welcome!");
+  res.json({ msg: "Welcome!" });
+});
+
+app.get("/api/v1", (req, res) => {
+  res.json({ msg: "API" });
 });
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", jobsRouter);
+app.use("/api/v1/jobs", authenticateUser, jobsRouter);
 
 // look for requests that does not match any current route
 app.use(notFoundMiddleware);
