@@ -10,6 +10,11 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  HANDLE_CHANGE,
+  CLEAR_VALUES,
+  CREATE_JOB_BEGIN,
+  CREATE_JOB_SUCCESS,
+  CREATE_JOB_ERROR,
 } from "./actions";
 
 import reducer from "./reducers";
@@ -29,6 +34,16 @@ const initialState = {
   userLocation: userLocation || "",
   jobLocation: userLocation || "",
   showSidebar: false,
+  isEditing: false,
+  editJobId: "",
+  position: "",
+  company: "",
+  applicationLink: "",
+  // jobLocation
+  jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
+  jobType: "full-time",
+  statusOptions: ["pending", "interview", "declined"],
+  status: "pending",
 };
 
 const AppContext = React.createContext();
@@ -39,8 +54,8 @@ const AppProvider = ({ children }) => {
   const authFetch = axios.create({
     baseURL: "/api/v1",
   });
+  // request
 
-  // request interceptor
   authFetch.interceptors.request.use(
     (config) => {
       config.headers.common["Authorization"] = `Bearer ${state.token}`;
@@ -50,13 +65,13 @@ const AppProvider = ({ children }) => {
       return Promise.reject(error);
     }
   );
-  // response interceptor
+  // response
   authFetch.interceptors.response.use(
     (response) => {
       return response;
     },
     (error) => {
-      // console.log(error.response);
+      // console.log(error.response)
       if (error.response.status === 401) {
         logoutUser();
       }
@@ -125,14 +140,12 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch.patch("/auth/updateUser", currentUser);
 
-      // no token
       const { user, location, token } = data;
 
       dispatch({
         type: UPDATE_USER_SUCCESS,
         payload: { user, location, token },
       });
-
       addUserToLocalStorage({ user, location, token });
     } catch (error) {
       if (error.response.status !== 401) {
@@ -141,6 +154,44 @@ const AppProvider = ({ children }) => {
           payload: { msg: error.response.data.msg },
         });
       }
+    }
+    clearAlert();
+  };
+
+  const handleChange = ({ name, value }) => {
+    dispatch({
+      type: HANDLE_CHANGE,
+      payload: { name, value },
+    });
+  };
+
+  const clearValues = () => {
+    dispatch({ type: CLEAR_VALUES });
+  };
+
+  const createJob = async () => {
+    dispatch({ type: CREATE_JOB_BEGIN });
+    try {
+      const { position, company, jobLocation, jobType, status } = state;
+
+      await authFetch.post("/jobs", {
+        company,
+        position,
+        jobLocation,
+        jobType,
+        status,
+      });
+      dispatch({
+        type: CREATE_JOB_SUCCESS,
+      });
+      // call function instead clearValues()
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: CREATE_JOB_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
     }
     clearAlert();
   };
@@ -154,6 +205,9 @@ const AppProvider = ({ children }) => {
         toggleSidebar,
         logoutUser,
         updateUser,
+        handleChange,
+        clearValues,
+        createJob,
       }}
     >
       {children}

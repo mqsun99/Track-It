@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Wrapper = styled.article`
   background: var(--white);
@@ -82,6 +82,9 @@ const Wrapper = styled.article`
   footer {
     margin-top: 1rem;
   }
+  div.btn-container {
+    margin-top: 10rem;
+  }
   .edit-btn,
   .delete-btn {
     letter-spacing: var(--letterSpacing);
@@ -100,6 +103,6 @@ const Wrapper = styled.article`
   &:hover .actions {
     visibility: visible;
   }
-`
+`;
 
-export default Wrapper
+export default Wrapper;
