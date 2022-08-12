@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Wrapper = styled.section`
   border-radius: var(--borderRadius);
@@ -37,6 +37,7 @@ const Wrapper = styled.section`
     margin-top: 0.5rem;
     button {
       height: 35px;
+      margin-top: 1rem;
     }
   }
   .clear-btn {
@@ -52,7 +53,8 @@ const Wrapper = styled.section`
       column-gap: 1rem;
     }
     .btn-container {
-      margin-top: 0;
+      margin-top: 1rem;
+      text-align: center;
     }
   }
   @media (min-width: 1120px) {
@@ -63,6 +65,6 @@ const Wrapper = styled.section`
       margin-top: 0;
     }
   }
-`
+`;
 
-export default Wrapper
+export default Wrapper;

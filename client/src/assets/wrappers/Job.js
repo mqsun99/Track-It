@@ -92,8 +92,8 @@ const Wrapper = styled.article`
     height: 30px;
   }
   .edit-btn {
-    color: var(--green-dark);
-    background: var(--green-light);
+    color: var(--blue-dark);
+    background: var(--blue-light);
     margin-right: 0.5rem;
   }
   .delete-btn {

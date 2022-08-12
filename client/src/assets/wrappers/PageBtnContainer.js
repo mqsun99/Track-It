@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Wrapper = styled.section`
   height: 6rem;
@@ -11,6 +11,7 @@ const Wrapper = styled.section`
   .btn-container {
     background: var(--primary-100);
     border-radius: var(--borderRadius);
+    margin-top: 1;
   }
   .pageBtn {
     background: transparent;
@@ -50,5 +51,5 @@ const Wrapper = styled.section`
     background: var(--primary-500);
     color: var(--white);
   }
-`
-export default Wrapper
+`;
+export default Wrapper;
